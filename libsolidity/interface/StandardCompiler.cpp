@@ -1469,28 +1469,28 @@ Json::Value StandardCompiler::compileYul(InputsAndSettings _inputsAndSettings)
 	if (runtimeObject.bytecode)
 		runtimeObject.bytecode->link(_inputsAndSettings.libraries);
 
-	for (string const& objectKind: vector<string>{"bytecode", "deployedBytecode"})
+	for (auto&& [kind, isDeployed]: {make_pair("bytecode", false), make_pair("deployedBytecode", true)})
 		if (isArtifactRequested(
 			_inputsAndSettings.outputSelection,
 			sourceName,
 			contractName,
-			evmObjectComponents(objectKind),
+			evmObjectComponents(kind),
 			wildcardMatchesExperimental
 		))
 		{
-			MachineAssemblyObject const& o = objectKind == "bytecode" ? object : runtimeObject;
+			MachineAssemblyObject const& o = !isDeployed ? object : runtimeObject;
 			if (o.bytecode)
-				output["contracts"][sourceName][contractName]["evm"][objectKind] =
+				output["contracts"][sourceName][contractName]["evm"][kind] =
 					collectEVMObject(
 						*o.bytecode,
 						o.sourceMappings.get(),
 						Json::arrayValue,
-						false,
+						isDeployed,
 						[&](string const& _element) { return isArtifactRequested(
 							_inputsAndSettings.outputSelection,
 							sourceName,
 							contractName,
-							"evm." + objectKind + "." + _element,
+							"evm." + string(kind) + "." + _element,
 							wildcardMatchesExperimental
 						); }
 					);
