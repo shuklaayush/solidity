@@ -15,3 +15,4 @@ contract Impl is Ext {
 }
 // ----
 // TypeError 9456: (211-240): Overriding function is missing "override" specifier.
+// TypeError 4327: (211-240): Function needs to specify overridden contracts "Base" and "IBase".
