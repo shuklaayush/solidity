@@ -627,12 +627,13 @@ ASTPointer<InlineAssembly> ASTJsonImporter::createInlineAssembly(Json::Value con
 
 	yul::Dialect const& dialect = yul::EVMDialect::strictAssemblyForEVM(evmVersion.value());
 	shared_ptr<yul::Block> operations = make_shared<yul::Block>(yul::AsmJsonImporter(m_sourceNames).createBlock(member(_node, "AST")));
-	return createASTNode<InlineAssembly>(
+	auto assembly = createASTNode<InlineAssembly>(
 		_node,
 		nullOrASTString(_node, "documentation"),
 		dialect,
 		operations
 	);
+	return assembly;
 }
 
 ASTPointer<Block> ASTJsonImporter::createBlock(Json::Value const& _node, bool _unchecked)
