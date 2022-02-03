@@ -48,11 +48,12 @@ TMPDIR=$(mktemp -d)
         cp "$REPO_ROOT/emscripten_build/libsolc/soljson.js" solc-js/
         pushd solc-js/
         npm install
-        npm run build
+        npm run build:tarball
+        mv "$(npm run --silent tarballName)" ../solc-js.tgz
         popd
 
         cp "$REPO_ROOT/scripts/bytecodecompare/prepare_report.js" .
-        npm install solc-js/
+        npm install solc-js.tgz
 
         echo "Running the compiler..."
         # shellcheck disable=SC2035
